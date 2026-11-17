@@ -13,7 +13,7 @@ const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || '';
 const SETUP_SECRET = process.env.SETUP_SECRET || '';
 const APP_URL = (process.env.APP_URL || '').replace(/\/$/, '');
 const ADMINS = new Set((process.env.ADMIN_IDS || '').split(',').map(x => x.trim()).filter(Boolean));
-const PHOTO = fs.existsSync(path.join(__dirname, 'bot-photo.jpg')) ? fs.readFileSync(path.join(__dirname, 'bot-photo.jpg')) : null;
+const PHOTO = fs.existsSync(path.join(__dirname, 'bot-photo.b64')) ? Buffer.from(fs.readFileSync(path.join(__dirname, 'bot-photo.b64'), 'utf8').trim(), 'base64') : null;
 const db = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false }, max: 8 });
 let schemaPromise;
 async function schema() {
