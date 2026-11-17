@@ -174,6 +174,7 @@ async function showShop(chat,p){
 async function onMessage(m){
   if(!m.from||m.from.is_bot)return;
   const p=await player(m.from),chat=m.chat.id,t=String(m.text||'').trim(),l=t.toLowerCase();
+  if(l==='/myid')return send(chat,'Твой Telegram ID: <code>'+m.from.id+'</code>. Его можно добавить в ADMIN_IDS в Railway.');
   if(l.startsWith('/start'))return sendPhoto(chat,'🏹 <b>Gift Hub — Chicken Archer</b>\n\n🎁 Ежедневный подарок раз в 24 часа.\n🪙 Продавай подарки и собирай монеты.\n🛍 Покупай оформление в магазине.\n🏷 Активируй промокоды.\n\nОткрой Mini App для красивого интерфейса или пользуйся кнопками ниже.');
   if(l==='/daily'||l==='/gift'||l==='🎁 ежедневный подарок'){
     const r=await daily(p.id);return send(chat,r.ok?'🎁 Получен подарок: '+r.gift.emoji+' <b>'+r.gift.name+'</b> ('+r.gift.rarity+'). Продажа: '+r.gift.sell_price+' монет.':'⏳ Следующий подарок будет через <b>'+cooldown(r.nextAt)+'</b>.');
@@ -217,7 +218,7 @@ app.get('/admin/setup',async(q,s)=>{
     await schema();
     await tg('setWebhook',{url:APP_URL+'/telegram/webhook',secret_token:WEBHOOK_SECRET,allowed_updates:['message','callback_query']});
     await tg('setChatMenuButton',{menu_button:{type:'web_app',text:'Gift Hub',web_app:{url:APP_URL+'/app'}}}).catch(()=>{});
-    await tg('setMyCommands',{commands:[{command:'start',description:'Главное меню'},{command:'daily',description:'Ежедневный подарок'},{command:'balance',description:'Баланс монет'},{command:'inventory',description:'Инвентарь'},{command:'shop',description:'Магазин'},{command:'promo',description:'Промокод'},{command:'help',description:'Помощь'}]}).catch(()=>{});
+    await tg('setMyCommands',{commands:[{command:'start',description:'Главное меню'},{command:'myid',description:'Показать мой Telegram ID'},{command:'daily',description:'Ежедневный подарок'},{command:'balance',description:'Баланс монет'},{command:'inventory',description:'Инвентарь'},{command:'shop',description:'Магазин'},{command:'promo',description:'Промокод'},{command:'help',description:'Помощь'}]}).catch(()=>{});
     return s.send('Готово: webhook и Mini App подключены.');
   }catch(e){console.error(e);return s.status(500).send('Не удалось настроить: '+e.message);}
 });
